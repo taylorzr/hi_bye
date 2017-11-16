@@ -6,9 +6,9 @@ import(
 	"log"
 	"strings"
 
-	"github.com/taylorzr/hi_bye/root"
-	"github.com/taylorzr/hi_bye/hipchat"
-	"github.com/taylorzr/hi_bye/storage"
+	"github.com/taylorzr/hibye/root"
+	"github.com/taylorzr/hibye/hipchat"
+	"github.com/taylorzr/hibye/storage"
 	"github.com/fatih/set"
 )
 

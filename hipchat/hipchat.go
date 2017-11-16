@@ -9,7 +9,7 @@ import(
 	"os"
 	"net/http"
 
-	"github.com/taylorzr/hi_bye/root"
+	"github.com/taylorzr/hibye/root"
 )
 
 var Yellow = "yellow"

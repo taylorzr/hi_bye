@@ -6,7 +6,7 @@ import(
 	"os"
 	"strconv"
 
-	"github.com/taylorzr/hi_bye/root"
+	"github.com/taylorzr/hibye/root"
 )
 
 func Write(path string, users []root.User) error {

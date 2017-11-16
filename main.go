@@ -2,7 +2,9 @@ package main
 
 import(
 	"fmt"
+	"os"
 	"log"
+	"strings"
 
 	"github.com/taylorzr/hi_bye/root"
 	"github.com/taylorzr/hi_bye/hipchat"
@@ -54,6 +56,48 @@ func idSet(users []root.User) *set.Set {
 	return idSet
 }
 
+func notify(result map[string][]root.User) (err error) {
+	if len(result["fired"]) > 0 {
+		message := buildMessage("Goodbye :(", result["fired"])
+
+		err = hipchat.SendMessage(message, hipchat.Red)
+
+		if err != nil {
+			return err
+		}
+	} else {
+		hipchat.SendMessage("No one hired today :/", hipchat.Yellow)
+	}
+
+	if len(result["hired"]) > 0 {
+		message := buildMessage("Hello :)", result["hired"])
+
+		err = hipchat.SendMessage(message, hipchat.Yellow)
+
+		if err != nil {
+			return err
+		}
+	} else {
+		err = hipchat.SendMessage("No one fired today :)", hipchat.Green)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func buildMessage(header string, users []root.User) (message string) {
+	messageLines := []string{ header }
+
+	for _, user := range users {
+		messageLines = append(messageLines, fmt.Sprintf("  - %s\n", user.Name))
+	}
+
+	return strings.Join(messageLines, "\n")
+}
+
 func notmain() {
 	log.Printf("Hitting up hipchat for all the users...")
 
@@ -74,33 +118,64 @@ func notmain() {
 	log.Println("Wrote user data to users.csv")
 }
 
-func notMain() {
-	oldUsers, _ := storage.Read("old_users.csv")
-	newUsers, _ := storage.Read("new_users.csv")
+func oldmain() {
+	oldUsers, err := storage.Read("old_users.csv")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	newUsers, err := storage.Read("new_users.csv")
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	result := compare(oldUsers, newUsers)
 
-	if len(result["fired"]) > 0 {
-		fmt.Println("Goodbye :(")
+	err = notify(result)
 
-		for _, user := range result["fired"] {
-			fmt.Printf("  - %s\n", user.Name)
-		}
-	}
-
-	if len(result["hired"]) > 0 {
-		fmt.Println("Hello :)")
-
-		for _, user := range result["hired"] {
-			fmt.Printf("  - %s\n", user.Name)
-		}
+	if err != nil {
+		log.Fatal(err)
 	}
 }
 
 func main() {
-	err := hipchat.SendMessage("Howdy")
+	if _, err := os.Stat("old_users.csv"); !os.IsNotExist(err) {
+		oldUsers, err := storage.Read("old_users.csv")
+		if err != nil {
+			log.Fatal(err)
+		}
 
-	if err != nil {
-		log.Fatal(err)
+		newUsers, err := hipchat.GetAllUsers()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		defer storage.Write("old_users.csv", newUsers)
+
+		comparison := compare(oldUsers, newUsers)
+
+		err = notify(comparison)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		newUsers, err := hipchat.GetAllUsers()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = storage.Write("old_users.csv", newUsers)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		err = hipchat.SendMessage("HiBye initialized, will report on next run", hipchat.Yellow)
+
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 }

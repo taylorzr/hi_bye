@@ -12,20 +12,24 @@ import(
 	"github.com/taylorzr/hi_bye/root"
 )
 
-const zach = "1590228"
+var Yellow = "yellow"
+var Green  = "green"
+var Red    = "red"
 
 var token = os.Getenv("HIPCHAT_TOKEN")
+
+const zach = "1590228"
 
 type UserResponse struct {
 	Items []root.User `json:"items"`
 }
 
-func SendMessage(message string) error {
+func SendMessage(message string, color string) error {
 	client := new(http.Client)
 
 	url := fmt.Sprintf("https://api.hipchat.com/v2/user/%s/message?auth_token=%s", zach, token)
 
-	json, err := json.Marshal(map[string]string{ "message": message })
+	json, err := json.Marshal(map[string]string{ "message": message, "color": color })
 
 	if err != nil {
 		return err

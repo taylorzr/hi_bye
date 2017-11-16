@@ -1,3 +1,5 @@
 [x] Load csv
 [x] Compare
-[ ] Send messages places about comparison
+[x] Send messages places about comparison
+[ ] Clean up main
+[ ] Test

@@ -66,7 +66,7 @@ func notify(result map[string][]root.User) (err error) {
 			return err
 		}
 	} else {
-		hipchat.SendMessage("No one hired today :/", hipchat.Yellow)
+		log.Println("No one fired since last run :)")
 	}
 
 	if len(result["hired"]) > 0 {
@@ -78,11 +78,7 @@ func notify(result map[string][]root.User) (err error) {
 			return err
 		}
 	} else {
-		err = hipchat.SendMessage("No one fired today :)", hipchat.Green)
-
-		if err != nil {
-			return err
-		}
+		log.Println("No one hired since last run :/")
 	}
 
 	return nil
@@ -92,7 +88,7 @@ func buildMessage(header string, users []root.User) (message string) {
 	messageLines := []string{ header }
 
 	for _, user := range users {
-		messageLines = append(messageLines, fmt.Sprintf("  - %s\n", user.Name))
+		messageLines = append(messageLines, fmt.Sprintf("  - %s", user.Name))
 	}
 
 	return strings.Join(messageLines, "\n")

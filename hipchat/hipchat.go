@@ -6,6 +6,7 @@ import(
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"net/http"
 
@@ -25,6 +26,8 @@ type UserResponse struct {
 }
 
 func SendMessage(message string, color string) error {
+	log.Println(message)
+
 	client := new(http.Client)
 
 	url := fmt.Sprintf("https://api.hipchat.com/v2/user/%s/message?auth_token=%s", zach, token)

@@ -66,7 +66,7 @@ func notify(result map[string][]root.User) (err error) {
 			return err
 		}
 	} else {
-		log.Println("No one fired since last run :)")
+		// log.Println("No one fired since last run :)")
 	}
 
 	if len(result["hired"]) > 0 {
@@ -78,7 +78,7 @@ func notify(result map[string][]root.User) (err error) {
 			return err
 		}
 	} else {
-		log.Println("No one hired since last run :/")
+		// log.Println("No one hired since last run :/")
 	}
 
 	return nil

@@ -3,3 +3,5 @@
 [x] Send messages places about comparison
 [ ] Clean up main
 [ ] Test
+[ ] Add some flag for logging because ideally the program is quiet when run for
+cron so I don't get a shitton of "mail" locally

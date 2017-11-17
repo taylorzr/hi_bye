@@ -13,9 +13,9 @@ import(
 	"github.com/taylorzr/hibye/root"
 )
 
-var Yellow = "yellow"
-var Green  = "green"
-var Red    = "red"
+const Yellow = "yellow"
+const Green  = "green"
+const Red    = "red"
 
 var token = os.Getenv("HIPCHAT_TOKEN")
 

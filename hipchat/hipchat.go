@@ -17,7 +17,7 @@ const Yellow = "yellow"
 const Green  = "green"
 const Red    = "red"
 
-const zach = "1590228"
+const room = "hibye"
 
 var token = os.Getenv("HIPCHAT_TOKEN")
 
@@ -30,7 +30,7 @@ func SendMessage(message string, color string) error {
 
 	client := new(http.Client)
 
-	url := fmt.Sprintf("https://api.hipchat.com/v2/user/%s/message?auth_token=%s", zach, token)
+	url := fmt.Sprintf("https://api.hipchat.com/v2/room/%s/message?auth_token=%s", room, token)
 
 	json, err := json.Marshal(map[string]string{ "message": message, "color": color })
 
@@ -52,7 +52,7 @@ func SendMessage(message string, color string) error {
 		return err
 	}
 
-	if response.StatusCode != 204 {
+	if response.StatusCode != 201 {
 		message := fmt.Sprintf("Expect 204 response, got %d", response.StatusCode)
 		return errors.New(message)
 	}

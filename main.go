@@ -9,7 +9,7 @@ import(
 	"github.com/taylorzr/hibye/storage"
 )
 
-const old_users_path = "old_users.csv"
+const old_users_path = "users.csv"
 // const old_users_path = "test_old_users.csv"
 
 func check() {

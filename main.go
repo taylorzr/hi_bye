@@ -26,10 +26,10 @@ func check() {
 
 	defer storage.Write(old_users_path, newUsers)
 
-	hiredUsers := compare.FindFired(oldUsers, newUsers)
-	firedUsers := compare.FindHired(oldUsers, newUsers)
+	firedUsers := compare.FindFired(oldUsers, newUsers)
+	hiredUsers := compare.FindHired(oldUsers, newUsers)
 
-	err = notify.Notify(hiredUsers, firedUsers)
+	err = notify.Notify(firedUsers, hiredUsers)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -56,13 +56,7 @@ func initialize() {
 }
 
 func main() {
-	dataExists, err := storage.Exists(old_users_path)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if dataExists {
+	if storage.Exists(old_users_path) {
 		check()
 	} else {
 		initialize()

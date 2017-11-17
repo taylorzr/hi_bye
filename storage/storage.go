@@ -9,14 +9,9 @@ import(
 	"github.com/taylorzr/hibye/root"
 )
 
-func Exists(path string) (bool, error) {
+func Exists(path string) bool {
 	_, err := os.Stat(path)
-
-	if err != nil {
-		return false, err
-	}
-
-	return !os.IsNotExist(err), nil
+	return !os.IsNotExist(err)
 }
 
 func Write(path string, users []root.User) error {

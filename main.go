@@ -1,7 +1,6 @@
 package main
 
 import(
-	"os"
 	"log"
 
 	"github.com/taylorzr/hibye/compare"
@@ -10,12 +9,17 @@ import(
 	"github.com/taylorzr/hibye/storage"
 )
 
-
 func main() {
 	old_users_path := "old_users.csv"
 	// old_users_path := "test_old_users.csv"
 
-	if _, err := os.Stat(old_users_path); !os.IsNotExist(err) {
+	dataExists, err := storage.Exists(old_users_path)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if dataExists {
 		oldUsers, err := storage.Read(old_users_path)
 		if err != nil {
 			log.Fatal(err)

@@ -17,9 +17,9 @@ const Yellow = "yellow"
 const Green  = "green"
 const Red    = "red"
 
-var token = os.Getenv("HIPCHAT_TOKEN")
-
 const zach = "1590228"
+
+var token = os.Getenv("HIPCHAT_TOKEN")
 
 type UserResponse struct {
 	Items []root.User `json:"items"`

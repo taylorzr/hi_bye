@@ -12,7 +12,7 @@ import(
 	"github.com/taylorzr/hibye/storage"
 )
 
-const messageHourLimit = 24
+const messageHourLimit = 1
 const last_message_path = "hibye_last_message"
 
 func Notify(fired []root.User, hired []root.User) (err error) {

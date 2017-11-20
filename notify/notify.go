@@ -47,7 +47,7 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 
 	if !notifiedRecently() {
 		if len(fired) == 0 && len(hired) == 0 {
-			err = hipchat.SendMessage("No one recently fired or hired :)", hipchat.Options{ Color: hipchat.Green })
+			err = hipchat.SendMessage("No one recently fired or hired :)", hipchat.Options{ Color: hipchat.Green, DontNotify: true })
 
 			if err != nil {
 				return err

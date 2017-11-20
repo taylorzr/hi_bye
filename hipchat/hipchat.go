@@ -13,11 +13,16 @@ import(
 	"github.com/taylorzr/hibye/root"
 )
 
-const Yellow = "yellow"
-const Green  = "green"
-const Red    = "red"
+const(
+	Yellow = Color("yellow")
+	Green  = Color("green")
+	Red    = Color("red")
+	Purple = Color("purple")
+	Gray   = Color("gray")
+	Random = Color("random")
 
-const room = "hibye"
+	room = "hibye"
+)
 
 var token, hipchatTokenExists = os.LookupEnv("HIPCHAT_TOKEN")
 
@@ -31,14 +36,41 @@ type UserResponse struct {
 	Items []root.User `json:"items"`
 }
 
-func SendMessage(message string, color string) error {
+type Options struct {
+	Color      Color
+	DontNotify bool
+	Format     string
+}
+
+func (options *Options) withDefaults() Options {
+	if options.Color == "" {
+		options.Color = Yellow
+	}
+
+	if options.Format == "" {
+		options.Format = "text"
+	}
+
+	return *options
+}
+
+type Color string
+
+func SendMessage(message string, options Options) error {
+	options = options.withDefaults()
+
 	log.Println(message)
 
 	client := new(http.Client)
 
-	url := fmt.Sprintf("https://api.hipchat.com/v2/room/%s/message?auth_token=%s", room, token)
+	url := fmt.Sprintf("https://api.hipchat.com/v2/room/%s/notification?auth_token=%s", room, token)
 
-	json, err := json.Marshal(map[string]string{ "message": message, "color": color })
+	json, err := json.Marshal(map[string]interface{}{ 
+		"message": message,
+		"message_format": options.Format,
+		"color": options.Color,
+		"notify": options.DontNotify,
+	})
 
 	if err != nil {
 		return err
@@ -58,7 +90,7 @@ func SendMessage(message string, color string) error {
 		return err
 	}
 
-	if response.StatusCode != 201 {
+	if response.StatusCode != 204 {
 		message := fmt.Sprintf("Sending message: Expected 204 response, got %d", response.StatusCode)
 		return errors.New(message)
 	}

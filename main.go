@@ -12,27 +12,11 @@ import(
 const users_path = "hibye_users.csv"
 // const users_path = "test_old_users.csv"
 
-func check() {
-	oldUsers, err := storage.Read(users_path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	newUsers, err := hipchat.GetAllUsers()
-	// newUsers, err := storage.Read("test_new_users.csv")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer storage.Write(users_path, newUsers)
-
-	firedUsers := compare.FindFired(oldUsers, newUsers)
-	hiredUsers := compare.FindHired(oldUsers, newUsers)
-
-	err = notify.Notify(firedUsers, hiredUsers)
-
-	if err != nil {
-		log.Fatal(err)
+func main() {
+	if !storage.Exists(users_path) {
+		initialize()
+	} else {
+		check()
 	}
 }
 
@@ -56,10 +40,26 @@ func initialize() {
 	}
 }
 
-func main() {
-	if !storage.Exists(users_path) {
-		initialize()
-	} else {
-		check()
+func check() {
+	oldUsers, err := storage.Read(users_path)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	newUsers, err := hipchat.GetAllUsers()
+	// newUsers, err := storage.Read("test_new_users.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer storage.Write(users_path, newUsers)
+
+	firedUsers := compare.FindFired(oldUsers, newUsers)
+	hiredUsers := compare.FindHired(oldUsers, newUsers)
+
+	err = notify.Notify(firedUsers, hiredUsers)
+
+	if err != nil {
+		log.Fatal(err)
 	}
 }

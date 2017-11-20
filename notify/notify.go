@@ -31,7 +31,7 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 		}
 
 		updateTimestamp()
-	} 
+	}
 
 	if len(hired) > 0 {
 		message := buildMessage("Hello :)", hired)

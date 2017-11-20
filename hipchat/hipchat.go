@@ -19,7 +19,13 @@ const Red    = "red"
 
 const room = "hibye"
 
-var token = os.Getenv("HIPCHAT_TOKEN")
+var token, hipchatTokenExists = os.LookupEnv("HIPCHAT_TOKEN")
+
+func init() {
+	if !hipchatTokenExists {
+		log.Fatal("HIPCHAT_TOKEN environment variable not set")
+	}
+}
 
 type UserResponse struct {
 	Items []root.User `json:"items"`
@@ -53,7 +59,7 @@ func SendMessage(message string, color string) error {
 	}
 
 	if response.StatusCode != 201 {
-		message := fmt.Sprintf("Expect 204 response, got %d", response.StatusCode)
+		message := fmt.Sprintf("Sending message: Expected 204 response, got %d", response.StatusCode)
 		return errors.New(message)
 	}
 
@@ -87,15 +93,20 @@ func getUsers() ([]byte, error) {
 		return nil, err
 	}
 
-	httpResponse, err := client.Do(request)
+	response, err := client.Do(request)
 
 	if err != nil {
 		return nil, err
 	}
 
-	defer httpResponse.Body.Close()
+	if response.StatusCode != 200 {
+		message := fmt.Sprintf("Getting users: Expected 200 response, got %d", response.StatusCode)
+		return nil, errors.New(message)
+	}
 
-	body, err := ioutil.ReadAll(httpResponse.Body)
+	defer response.Body.Close()
+
+	body, err := ioutil.ReadAll(response.Body)
 
 	if err != nil {
 		return nil, err

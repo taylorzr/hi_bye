@@ -2,7 +2,8 @@
 [x] Compare
 [x] Send messages places about comparison
 [x] Clean up main
+[x] Send a hipchat message once per day even when nothing changes
 [ ] Test
 [ ] Add some flag for logging because ideally the program is quiet when run for
     cron so I don't get a shitton of "mail" locally
-[ ] Send a hipchat message once per day even when nothing changes
+[ ] updateTimestamp should probably move to the hipchat package

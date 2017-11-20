@@ -13,4 +13,5 @@
 # Project-local glide cache, RE: https://github.com/Masterminds/glide/issues/736
 .glide/
 
-users.csv
+hibye_users.csv
+hibye_last_message

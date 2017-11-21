@@ -10,6 +10,7 @@ import(
 )
 
 type Color string
+type Format string
 
 const(
 	Yellow = Color("yellow")
@@ -19,23 +20,26 @@ const(
 	Gray   = Color("gray")
 	Random = Color("random")
 
+	HTML = Format("html")
+	Text = Format("text")
+
 	room = "hibye"
 )
 
 type Notification struct {
 	Message string
-	Color string
-	Format string
+	Color Color
+	Format Format
 	DontNotify bool
 }
 
 func (notification *Notification) withDefaults() Notification {
 	if notification.Color == "" {
-		notification.Color = "yellow"
+		notification.Color = Yellow
 	}
 
 	if notification.Format == "" {
-		notification.Format = "text"
+		notification.Format = Text
 	}
 
 	return *notification

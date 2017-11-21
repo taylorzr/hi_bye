@@ -33,7 +33,10 @@ func initialize() {
 		log.Fatal(err)
 	}
 
-	err = hipchat.SendMessage("HiBye initialized, will report on next run", hipchat.Options{ DontNotify: true })
+	err = hipchat.Send(hipchat.Notification{
+		Message: "HiBye initialized, will report on next run",
+		DontNotify: true,
+	})
 
 	if err != nil {
 		log.Fatal(err)

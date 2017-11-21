@@ -22,20 +22,39 @@ const(
 	room = "hibye"
 )
 
-func SendMessage(message string, options Options) error {
-	options = options.withDefaults()
+type Notification struct {
+	Message string
+	Color string
+	Format string
+	DontNotify bool
+}
 
-	log.Println(message)
+func (notification *Notification) withDefaults() Notification {
+	if notification.Color == "" {
+		notification.Color = "yellow"
+	}
+
+	if notification.Format == "" {
+		notification.Format = "text"
+	}
+
+	return *notification
+}
+
+func Send(notification Notification) error {
+	notification = notification.withDefaults()
+
+	log.Println(notification.Message)
 
 	client := new(http.Client)
 
 	url := fmt.Sprintf("https://api.hipchat.com/v2/room/%s/notification?auth_token=%s", room, token)
 
 	json, err := json.Marshal(map[string]interface{}{ 
-		"message": message,
-		"message_format": options.Format,
-		"color": options.Color,
-		"notify": options.DontNotify,
+		"message": notification.Message,
+		"message_format": notification.Format,
+		"color": notification.Color,
+		"notify": notification.DontNotify,
 	})
 
 	if err != nil {
@@ -62,22 +81,4 @@ func SendMessage(message string, options Options) error {
 	}
 
 	return nil
-}
-
-type Options struct {
-	Color      Color
-	DontNotify bool
-	Format     string
-}
-
-func (options *Options) withDefaults() Options {
-	if options.Color == "" {
-		options.Color = Yellow
-	}
-
-	if options.Format == "" {
-		options.Format = "text"
-	}
-
-	return *options
 }

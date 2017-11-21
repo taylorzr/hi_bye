@@ -58,7 +58,7 @@ func Send(notification Notification) error {
 		"message": notification.Message,
 		"message_format": notification.Format,
 		"color": notification.Color,
-		"notify": notification.DontNotify,
+		"notify": !notification.DontNotify,
 	})
 
 	if err != nil {

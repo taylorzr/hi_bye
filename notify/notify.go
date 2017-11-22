@@ -36,7 +36,7 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 
 	if len(hired) > 0 {
 		err := hipchat.Send(hipchat.Notification{
-			Message: buildMessage("Hello :)", fired),
+			Message: buildMessage("Hello :)", hired),
 			Color: hipchat.Green,
 		})
 

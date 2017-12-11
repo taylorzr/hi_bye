@@ -25,6 +25,7 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 		err := hipchat.Send(hipchat.Notification{
 			Message: buildMessage("Goodbye :(", fired),
 			Color: hipchat.Red,
+			Notify: true,
 		})
 
 		if err != nil {
@@ -38,6 +39,7 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 		err := hipchat.Send(hipchat.Notification{
 			Message: buildMessage("Hello :)", hired),
 			Color: hipchat.Green,
+			Notify: true,
 		})
 
 		if err != nil {
@@ -52,7 +54,6 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 			err := hipchat.Send(hipchat.Notification{
 				Message: "No one recently fired or hired :)",
 				Color: hipchat.Green,
-				DontNotify: true,
 			})
 
 			if err != nil {

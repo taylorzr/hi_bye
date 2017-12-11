@@ -30,7 +30,7 @@ type Notification struct {
 	Message string
 	Color Color
 	Format Format
-	DontNotify bool
+	Notify bool
 }
 
 func (notification *Notification) withDefaults() Notification {
@@ -54,11 +54,11 @@ func Send(notification Notification) error {
 
 	url := fmt.Sprintf("https://api.hipchat.com/v2/room/%s/notification?auth_token=%s", room, token)
 
-	json, err := json.Marshal(map[string]interface{}{ 
+	json, err := json.Marshal(map[string]interface{}{
 		"message": notification.Message,
 		"message_format": notification.Format,
 		"color": notification.Color,
-		"notify": !notification.DontNotify,
+		"notify": notification.Notify,
 	})
 
 	if err != nil {

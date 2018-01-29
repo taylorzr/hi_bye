@@ -11,10 +11,10 @@ import(
 )
 
 type UserResponse struct {
-	Items []root.User `json:"items"`
+	Items root.Users `json:"items"`
 }
 
-func GetAllUsers() ([]root.User, error) {
+func GetAllUsers() (root.Users, error) {
 	httpBody, err := getUsers()
 
 	if err != nil {
@@ -64,7 +64,7 @@ func getUsers() ([]byte, error) {
 }
 
 
-func unmarshalUsers(httpBody []byte) ([]root.User, error) {
+func unmarshalUsers(httpBody []byte) (root.Users, error) {
 	userResponse := UserResponse{}
 
 	err := json.Unmarshal(httpBody, &userResponse)

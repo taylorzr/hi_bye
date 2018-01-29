@@ -4,7 +4,7 @@
 [x] Clean up main
 [x] Send a hipchat message once per day even when nothing changes
 [x] Test
+[x] Use bolt to store stuff, like the existing config, and maybe historicaly data like when people got hired/fired
+[x] updateTimestamp should probably move to the hipchat package
 [ ] Add some flag for logging because ideally the program is quiet when run for
     cron so I don't get a shitton of "mail" locally
-[ ] updateTimestamp should probably move to the hipchat package
-[ ] Use bolt to store stuff, like the existing config, and maybe historicaly data like when people got hired/fired

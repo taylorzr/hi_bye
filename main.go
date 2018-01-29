@@ -9,11 +9,12 @@ import(
 	"github.com/taylorzr/hibye/storage"
 )
 
-const users_path = "hibye_users.csv"
-// const users_path = "test_old_users.csv"
+func init() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+}
 
 func main() {
-	if !storage.Exists(users_path) {
+	if !storage.Exists() {
 		initialize()
 	} else {
 		check()
@@ -21,14 +22,15 @@ func main() {
 }
 
 func initialize() {
-	newUsers, err := hipchat.GetAllUsers()
+    storage.Create()
+	notify.UpdateTimestamp()
 
+	newUsers, err := hipchat.GetAllUsers()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	err = storage.Write(users_path, newUsers)
-
+	err = storage.WriteUsers(newUsers)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,7 +43,7 @@ func initialize() {
 }
 
 func check() {
-	oldUsers, err := storage.Read(users_path)
+	oldUsers, err := storage.ReadUsers()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,7 +60,7 @@ func check() {
 		log.Fatal(err)
 	}
 
-	defer storage.Write(users_path, newUsers)
+	defer storage.WriteUsers(newUsers)
 
 	firedUsers := compare.FindFired(oldUsers, newUsers)
 	hiredUsers := compare.FindHired(oldUsers, newUsers)
@@ -69,3 +71,4 @@ func check() {
 		log.Fatal(err)
 	}
 }
+

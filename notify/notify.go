@@ -2,7 +2,7 @@ package notify
 
 import(
 	"fmt"
-	"io/ioutil"
+	// "io/ioutil"
 	"log"
 	"strings"
 	"time"
@@ -13,14 +13,8 @@ import(
 )
 
 const messageHourLimit = 24
-const last_message_path = "hibye_last_message"
 
-func Notify(fired []root.User, hired []root.User) (err error) {
-	if !storage.Exists(last_message_path) {
-		updateTimestamp()
-		// log.Println("Initialized last run time")
-	}
-
+func Notify(fired root.Users, hired root.Users) (err error) {
 	if len(fired) > 0 {
 		err := hipchat.Send(hipchat.Notification{
 			Message: buildMessage("Goodbye :(", fired),
@@ -32,7 +26,7 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 			return err
 		}
 
-		updateTimestamp()
+		UpdateTimestamp()
 	}
 
 	if len(hired) > 0 {
@@ -46,7 +40,7 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 			return err
 		}
 
-		updateTimestamp()
+		UpdateTimestamp()
 	}
 
 	if !notifiedRecently() {
@@ -60,7 +54,7 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 				return err
 			}
 
-			updateTimestamp()
+			UpdateTimestamp()
 		}
 	}
 
@@ -68,15 +62,7 @@ func Notify(fired []root.User, hired []root.User) (err error) {
 }
 
 func notifiedRecently() bool {
-	timeData, err := ioutil.ReadFile(last_message_path)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	t := time.Time{}
-
-	err = t.UnmarshalText(timeData)
+	t, err := storage.ReadMessageTimestamp()
 
 	if err != nil {
 		log.Fatal(err)
@@ -87,17 +73,15 @@ func notifiedRecently() bool {
 	return duration.Hours() < messageHourLimit
 }
 
-func updateTimestamp() {
-	timeText, _ := time.Now().MarshalText()
-
-	err := ioutil.WriteFile(last_message_path, []byte(timeText), 0644)
+func UpdateTimestamp() {
+	err := storage.WriteMessageTimestamp(time.Now())
 
 	if err != nil {
 		log.Fatal(err)
 	}
 }
 
-func buildMessage(header string, users []root.User) (message string) {
+func buildMessage(header string, users root.Users) (message string) {
 	messageLines := []string{ header }
 
 	for _, user := range users {

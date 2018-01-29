@@ -6,15 +6,15 @@ import(
 )
 
 
-func FindFired(old []root.User, new []root.User) []root.User {
+func FindFired(old root.Users, new root.Users) root.Users {
 	return findDifference(old, new)
 }
 
-func FindHired(old []root.User, new []root.User) []root.User {
+func FindHired(old root.Users, new root.Users) root.Users {
 	return findDifference(new, old)
 }
 
-func findDifference(from []root.User, to []root.User) []root.User {
+func findDifference(from root.Users, to root.Users) root.Users {
 	fromSet := idSet(from)
 	toSet   := idSet(to)
 
@@ -23,8 +23,8 @@ func findDifference(from []root.User, to []root.User) []root.User {
 	return findUsers(differentIDs, from)
 }
 
-func findUsers(ids []int, users []root.User) []root.User {
-	foundUsers := []root.User{}
+func findUsers(ids []int, users root.Users) root.Users {
+	foundUsers := root.Users{}
 
 	if len(ids) > 0 {
 		usersByID := map[int]root.User{}
@@ -41,7 +41,7 @@ func findUsers(ids []int, users []root.User) []root.User {
 	return foundUsers
 }
 
-func idSet(users []root.User) *set.Set {
+func idSet(users root.Users) *set.Set {
 	idSet := set.New()
 
 	for _, user := range users {

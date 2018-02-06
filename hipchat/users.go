@@ -6,8 +6,10 @@ import(
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	"github.com/taylorzr/hibye/root"
+	"github.com/taylorzr/hibye/storage"
 )
 
 type UserResponse struct {
@@ -22,6 +24,12 @@ func GetAllUsers() (root.Users, error) {
 	}
 
 	users, err := unmarshalUsers(httpBody)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = storage.WriteUsersTimestamp(time.Now())
 
 	if err != nil {
 		return nil, err

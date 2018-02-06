@@ -13,6 +13,40 @@ var db             = connect()
 var bucketName     = []byte("hibye")
 var usersKey       = []byte("users")
 var lastMessageKey = []byte("last_message")
+var lastUsersKey = []byte("last_users")
+
+// TODO: These Timestamp read/write functions are exactly the same except the
+// key where the data is store. Make this abstract. Also how can we make more
+// complex data abstract, e.g. the users data
+func ReadUsersTimestamp() (time.Time, error) {
+	timeData, err := read(lastUsersKey)
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	t := time.Time{}
+
+	err = t.UnmarshalText(timeData)
+
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return t, nil
+}
+
+func WriteUsersTimestamp(t time.Time) error {
+	timeText, _ := t.MarshalText()
+
+	err := write(lastUsersKey, timeText)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func ReadMessageTimestamp() (time.Time, error) {
 	timeData, err := read(lastMessageKey)

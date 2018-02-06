@@ -2,12 +2,17 @@ package main
 
 import(
 	"log"
+	"os"
+	"fmt"
+	"time"
 
 	"github.com/taylorzr/hibye/compare"
 	"github.com/taylorzr/hibye/hipchat"
 	"github.com/taylorzr/hibye/notify"
 	"github.com/taylorzr/hibye/storage"
 )
+
+const ignoreUsersFetchErrorLimitHours = 1
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
@@ -49,15 +54,22 @@ func check() {
 	}
 
 	newUsers, err := hipchat.GetAllUsers()
-	// newUsers, err := storage.Read("test_new_users.csv")
 	if err != nil {
-		// TODO:
-		// Sometimes get an error written to stderr like:
-		// 2018/01/24 10:04:05 Get https://api.hipchat.com/v2/user?max-results=1000&auth_token=ZqDKnJaxyiK7wEScsmMW2ad6yHD81P13Tl10Kwjr: dial tcp: lookup api.hipchat.com: no such host
-		// This is because the laptop has no network connection, it would be
-		// nice to only log when a successful run of this program hasn't been
-		// made in the last few hours or something
-		log.Fatal(err)
+		lastUsersTime, err := storage.ReadUsersTimestamp()
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		duration := time.Since(lastUsersTime)
+
+		// TODO: This could also be handled by maybe checking if there is a
+		// network connection and just not doing anything
+		if duration.Hours() < ignoreUsersFetchErrorLimitHours {
+			os.Exit(0)
+		} else {
+			log.Fatal(fmt.Sprintf("Error fetching hipchat users for the last %d hours", ignoreUsersFetchErrorLimitHours))
+		}
 	}
 
 	defer storage.WriteUsers(newUsers)
